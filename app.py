@@ -14,33 +14,75 @@ from streamlit_autorefresh import st_autorefresh
 st.set_page_config(
     page_title="Pro Trading Dashboard",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
+    page_icon="📈"
 )
 
 
 def load_css():
-    """Injects custom CSS for styling."""
+    """Simple CSS for custom floating cards only."""
     st.markdown("""
         <style>
             .floating-card-container {
-                display: flex; flex-wrap: wrap; justify-content: space-around;
-                padding: 1rem 0; margin-bottom: 1rem;
+                display: flex; 
+                flex-wrap: wrap; 
+                justify-content: space-around;
+                padding: 1rem 0; 
+                margin-bottom: 1rem;
+                gap: 1rem;
             }
+            
             .floating-card {
-                background-color: #262730; border-radius: 10px;
-                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-                padding: 1.25rem; margin: 0.5rem; text-align: center;
-                flex-grow: 1; min-width: 200px; transition: 0.3s;
+                background-color: white;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                padding: 1.5rem; 
+                text-align: center;
+                flex: 1; 
+                min-width: 200px; 
+                transition: all 0.3s ease;
             }
+            
             .floating-card:hover {
-                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4), 0 12px 40px 0 rgba(0,0,0,0.3);
-                transform: translateY(-5px);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             }
-            .card-title { font-size: 1.1rem; color: #A0A0A0; margin-bottom: 0.5rem; font-weight: bold; }
-            .card-value { font-size: 2.2rem; font-weight: bold; color: #FAFAFA; line-height: 1.2; }
-            .card-delta { font-size: 1rem; margin-top: 0.5rem; font-weight: bold; }
-            .green-text { color: #26A69A; }
-            .red-text { color: #EF5350; }
+            
+            .card-title { 
+                font-size: 0.9rem; 
+                color: #666; 
+                margin-bottom: 0.5rem; 
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .card-value { 
+                font-size: 2rem; 
+                font-weight: 700; 
+                color: #333; 
+                line-height: 1.2;
+                margin-bottom: 0.5rem;
+            }
+            
+            .card-delta { 
+                font-size: 0.9rem; 
+                font-weight: 600;
+                padding: 4px 8px;
+                border-radius: 4px;
+                display: inline-block;
+            }
+            
+            .green-text { 
+                color: #28a745;
+                background-color: rgba(40, 167, 69, 0.1);
+            }
+            
+            .red-text { 
+                color: #dc3545;
+                background-color: rgba(220, 53, 69, 0.1);
+            }
         </style>
     """, unsafe_allow_html=True)
 

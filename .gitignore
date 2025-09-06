@@ -145,4 +145,5 @@ ehthumbs.db
 Thumbs.db
 
 # Streamlit
-.streamlit/CLAUDE.md
+.streamlit/secrets.toml
+CLAUDE.md

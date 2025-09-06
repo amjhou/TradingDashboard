@@ -1,7 +1,7 @@
 # trading_dashboard/indicators.py
 
 import pandas as pd
-import pandas_ta as ta
+import numpy as np
 import yfinance as yf
 import streamlit as st
 import pytz
@@ -17,15 +17,35 @@ def compute_indicators(df: pd.DataFrame) -> pd.DataFrame:
               inplace=True, errors='ignore')
 
     try:
-        df.ta.vwap(append=True)
-        df.ta.macd(close='close', fast=12, slow=26, signal=9, append=True)
-        df.ta.rsi(close='close', length=14, append=True)
-        df.ta.ema(length=50, append=True)
-
-        if 'VWAP_D' in df.columns:
-            df.rename(columns={'VWAP_D': 'VWAP'}, inplace=True)
-        if 'RSI_14' in df.columns:
-            df.rename(columns={'RSI_14': 'RSI'}, inplace=True)
+        # Calculate VWAP manually (Volume Weighted Average Price)
+        typical_price = (df['high'] + df['low'] + df['close']) / 3
+        df['VWAP'] = (typical_price * df['volume']).cumsum() / df['volume'].cumsum()
+        
+        # Calculate EMA manually
+        def calculate_ema(prices, period):
+            alpha = 2 / (period + 1)
+            ema = prices.ewm(alpha=alpha, adjust=False).mean()
+            return ema
+        
+        df['EMA_50'] = calculate_ema(df['close'], 50)
+        
+        # Calculate MACD manually
+        ema_12 = calculate_ema(df['close'], 12)
+        ema_26 = calculate_ema(df['close'], 26)
+        df['MACD_12_26_9'] = ema_12 - ema_26
+        df['MACDs_12_26_9'] = calculate_ema(df['MACD_12_26_9'], 9)
+        df['MACDh_12_26_9'] = df['MACD_12_26_9'] - df['MACDs_12_26_9']
+        
+        # Calculate RSI manually
+        def calculate_rsi(prices, period=14):
+            delta = prices.diff()
+            gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
+            loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
+            rs = gain / loss
+            rsi = 100 - (100 / (1 + rs))
+            return rsi
+        
+        df['RSI'] = calculate_rsi(df['close'])
 
         df.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"},
                   inplace=True, errors='ignore')
