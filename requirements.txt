@@ -8,3 +8,4 @@ pandas-ta>=0.3.14b0
 pytz>=2023.3
 pandas-market-calendars>=4.3.0
 streamlit-autorefresh>=1.0.1
+setuptools>=65.0.0
